@@ -87,9 +87,20 @@ flutter test
 flutter build appbundle --dart-define=USE_FIREBASE=true
 ```
 
-Before the first upload: create an upload keystore and configure signing in
-`android/app/build.gradle.kts` (see https://docs.flutter.dev/deployment/android), and confirm
-the `applicationId` (`in.fairsplit.app`). It can't be changed after the first upload.
+Release builds are signed with the upload key named in `android/key.properties`
+(gitignored), in this format:
+
+```properties
+storePassword=...
+keyPassword=...
+keyAlias=upload
+storeFile=/absolute/path/to/upload-keystore.jks
+```
+
+Without that file, release builds fall back to the debug key, which Play rejects. Keep the
+keystore and its passwords backed up somewhere safe: with Play App Signing, a lost upload key
+can be reset through Play support, but it takes days. The `applicationId` (`in.fairsplit.app`)
+can't be changed after the first upload.
 
 ## Privacy policy and account-deletion pages
 
