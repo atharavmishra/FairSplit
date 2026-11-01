@@ -1,0 +1,62 @@
+{
+  "project_info": {
+    "project_number": "953307720046",
+    "project_id": "fairsplit-fa3a5",
+    "storage_bucket": "fairsplit-fa3a5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:953307720046:android:cebbdf0d0d8b314ec8397f",
+        "android_client_info": {
+          "package_name": "in.fairsplit.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "953307720046-35bn86v2k33uq3usgt1hk46kl9na2a2k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "in.fairsplit.app",
+            "certificate_hash": "f5913f09ce73ef0e8d3e7c12e95780742e9f07de"
+          }
+        },
+        {
+          "client_id": "953307720046-dgts74ufk6fpv8lpghh7pt8mfkkeud5j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "in.fairsplit.app",
+            "certificate_hash": "b9fc72dd098853c84a859b81153ce69cbf2cdddd"
+          }
+        },
+        {
+          "client_id": "953307720046-1gqm3tq8e45b78pnfjlj8ohlr5sd3ote.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDYQF2pPEFe4rN9R3iaFsrSSSHUaQg5w_w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "953307720046-1gqm3tq8e45b78pnfjlj8ohlr5sd3ote.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "953307720046-7t945pmtasrsc516rveft9ddmtlkah5r.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "in.fairsplit.fairsplit"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
