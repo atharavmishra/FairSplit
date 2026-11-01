@@ -102,6 +102,12 @@ keystore and its passwords backed up somewhere safe: with Play App Signing, a lo
 can be reset through Play support, but it takes days. The `applicationId` (`in.fairsplit.app`)
 can't be changed after the first upload.
 
+## Store listing and Play Console answers
+
+`store/listing.md` holds the Play listing copy, `store/play-console-answers.md` the Data
+safety, content rating and other App content answers. `store/icon-512.png` and
+`store/feature-graphic.png` are rendered by `flutter test tool/render_store_test.dart`.
+
 ## Privacy policy and account-deletion pages
 
 `docs/` holds the public site Play Store requires: `privacy.html`, `delete-account.html` and a
