@@ -1,0 +1,37 @@
+rules_version = '2';
+
+// Deploy with: firebase deploy --only firestore:rules
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+
+    function hasAccess(groupData) {
+      return signedIn() && request.auth.uid in groupData.accessUids;
+    }
+
+    function groupData(groupId) {
+      return get(/databases/$(database)/documents/groups/$(groupId)).data;
+    }
+
+    match /groups/{groupId} {
+      allow read, delete: if hasAccess(resource.data);
+      allow create: if signedIn() && request.auth.uid in request.resource.data.accessUids;
+
+      // Members can edit; anyone with the invite code may add only themselves.
+      allow update: if hasAccess(resource.data) || (
+        signedIn()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['accessUids'])
+        && request.resource.data.accessUids.toSet()
+             == resource.data.accessUids.toSet().union([request.auth.uid].toSet())
+      );
+
+      match /expenses/{expenseId} {
+        allow read, write: if hasAccess(groupData(groupId));
+      }
+      match /settlements/{settlementId} {
+        allow read, write: if hasAccess(groupData(groupId));
+      }
+    }
+  }
+}
