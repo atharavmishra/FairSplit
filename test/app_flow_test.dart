@@ -81,6 +81,7 @@ void main() {
     await tester.tap(find.byTooltip('Account'));
     await tester.pumpAndSettle();
     expect(find.text('Link Google account'), findsOneWidget);
+    expect(find.text('Privacy policy'), findsOneWidget);
 
     await tester.tap(find.text('Sign out'));
     await tester.pumpAndSettle();

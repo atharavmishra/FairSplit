@@ -91,6 +91,19 @@ Before the first upload: create an upload keystore and configure signing in
 `android/app/build.gradle.kts` (see https://docs.flutter.dev/deployment/android), and confirm
 the `applicationId` (`in.fairsplit.app`). It can't be changed after the first upload.
 
+## Privacy policy and account-deletion pages
+
+`docs/` holds the public site Play Store requires: `privacy.html`, `delete-account.html` and a
+landing page. Before publishing:
+
+1. Replace every `[CONTACT_EMAIL]` in `docs/*.html` with a real support address.
+2. Publish with GitHub Pages: push to a **public** repo named `fairsplit` under
+   `Atharv-Mishra-25`, then Settings → Pages → Deploy from branch `main`, folder `/docs`.
+   (To keep the code private, put only the `docs/` files in that public repo; the URL is the same.)
+3. The pages then live at https://atharv-mishra-25.github.io/fairsplit/ — this base URL is in
+   `lib/core/links.dart` (used by the Account screen). Paste the privacy and deletion URLs into
+   Play Console.
+
 ## Roadmap
 
 - [x] Groups, members without accounts, invite code + claim your name
@@ -102,5 +115,6 @@ the `applicationId` (`in.fairsplit.app`). It can't be changed after the first up
 - [ ] Multiple payers in the UI (model already supports it)
 - [ ] Receipt scanning (ML Kit), categories, charts, search, CSV export
 - [ ] Push reminders, recurring expenses, multi-currency
-- [ ] Privacy policy page + web account-deletion page (both required by Play Store)
+- [x] Privacy policy + account-deletion pages (`docs/`; contact email and publishing pending)
+- [x] App icon and splash screen
 - [ ] Phone (OTP) sign-in

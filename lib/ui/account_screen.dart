@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
 
+import '../core/links.dart';
 import '../state/providers.dart';
 import 'auth_actions.dart';
 import 'auth_gate.dart';
@@ -102,6 +104,11 @@ class _AccountScreenState extends ConsumerState<AccountScreen> {
                 ),
               ),
             const Divider(),
+            ListTile(
+              leading: const Icon(Icons.privacy_tip_outlined),
+              title: const Text('Privacy policy'),
+              onTap: () => launchUrl(privacyPolicyUri, mode: LaunchMode.externalApplication),
+            ),
             ListTile(
               leading: const Icon(Icons.logout),
               title: const Text('Sign out'),
