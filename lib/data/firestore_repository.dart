@@ -13,7 +13,7 @@ import 'repository.dart';
 /// Access is controlled by `accessUids` on the group (see firestore.rules).
 class FirestoreRepository implements Repository {
   FirestoreRepository(this.currentUid, [FirebaseFirestore? db])
-      : _db = db ?? FirebaseFirestore.instance;
+    : _db = db ?? FirebaseFirestore.instance;
 
   final FirebaseFirestore _db;
 
@@ -27,21 +27,26 @@ class FirestoreRepository implements Repository {
 
   /// Firestore returns Timestamps; the models use DateTime.
   static Map<String, dynamic> _dates(Map<String, dynamic> data) => {
-        for (final e in data.entries)
-          e.key: e.value is Timestamp ? (e.value as Timestamp).toDate() : e.value,
-      };
+    for (final e in data.entries)
+      e.key: e.value is Timestamp ? (e.value as Timestamp).toDate() : e.value,
+  };
 
   @override
   Stream<List<Group>> watchGroups() => _groups
       .where('accessUids', arrayContains: currentUid)
       .snapshots()
       // Sorted here rather than with orderBy, which would need a composite index.
-      .map((s) => s.docs.map((d) => Group.fromMap(d.id, _dates(d.data()))).toList()
-        ..sort((a, b) => b.createdAt.compareTo(a.createdAt)));
+      .map(
+        (s) =>
+            s.docs.map((d) => Group.fromMap(d.id, _dates(d.data()))).toList()
+              ..sort((a, b) => b.createdAt.compareTo(a.createdAt)),
+      );
 
   @override
-  Stream<Group?> watchGroup(String groupId) => _groups.doc(groupId).snapshots().map(
-      (d) => d.exists ? Group.fromMap(d.id, _dates(d.data()!)) : null);
+  Stream<Group?> watchGroup(String groupId) => _groups
+      .doc(groupId)
+      .snapshots()
+      .map((d) => d.exists ? Group.fromMap(d.id, _dates(d.data()!)) : null);
 
   @override
   Stream<List<Expense>> watchExpenses(String groupId) => _groups
@@ -49,8 +54,7 @@ class FirestoreRepository implements Repository {
       .collection('expenses')
       .orderBy('date', descending: true)
       .snapshots()
-      .map((s) =>
-          s.docs.map((d) => Expense.fromMap(d.id, groupId, _dates(d.data()))).toList());
+      .map((s) => s.docs.map((d) => Expense.fromMap(d.id, groupId, _dates(d.data()))).toList());
 
   @override
   Stream<List<Settlement>> watchSettlements(String groupId) => _groups
@@ -58,8 +62,7 @@ class FirestoreRepository implements Repository {
       .collection('settlements')
       .orderBy('date', descending: true)
       .snapshots()
-      .map((s) =>
-          s.docs.map((d) => Settlement.fromMap(d.id, groupId, _dates(d.data()))).toList());
+      .map((s) => s.docs.map((d) => Settlement.fromMap(d.id, groupId, _dates(d.data()))).toList());
 
   @override
   Future<String> createGroup({
@@ -86,8 +89,8 @@ class FirestoreRepository implements Repository {
 
   @override
   Future<void> joinGroup(String groupId) => _groups.doc(groupId).update({
-        'accessUids': FieldValue.arrayUnion([currentUid]),
-      });
+    'accessUids': FieldValue.arrayUnion([currentUid]),
+  });
 
   @override
   Future<void> saveMembers(String groupId, List<Member> members) async {

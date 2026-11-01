@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../state/providers.dart';
+import 'account_screen.dart';
 import 'create_group_screen.dart';
 import 'group_screen.dart';
 
@@ -20,6 +21,12 @@ class GroupsScreen extends ConsumerWidget {
             icon: const Icon(Icons.group_add_outlined),
             onPressed: () => _join(context, ref),
           ),
+          IconButton(
+            tooltip: 'Account',
+            icon: const Icon(Icons.account_circle_outlined),
+            onPressed: () =>
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const AccountScreen())),
+          ),
         ],
       ),
       body: groups.when(
@@ -35,10 +42,15 @@ class GroupsScreen extends ConsumerWidget {
                   return ListTile(
                     leading: CircleAvatar(child: Text(g.name.characters.first.toUpperCase())),
                     title: Text(g.name),
-                    subtitle: Text(g.members.map((m) => m.name).join(', '),
-                        maxLines: 1, overflow: TextOverflow.ellipsis),
-                    onTap: () => Navigator.push(context,
-                        MaterialPageRoute(builder: (_) => GroupScreen(groupId: g.id))),
+                    subtitle: Text(
+                      g.members.map((m) => m.name).join(', '),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => GroupScreen(groupId: g.id)),
+                    ),
                   );
                 },
               ),
@@ -46,8 +58,8 @@ class GroupsScreen extends ConsumerWidget {
       floatingActionButton: FloatingActionButton.extended(
         icon: const Icon(Icons.add),
         label: const Text('New group'),
-        onPressed: () => Navigator.push(
-            context, MaterialPageRoute(builder: (_) => const CreateGroupScreen())),
+        onPressed: () =>
+            Navigator.push(context, MaterialPageRoute(builder: (_) => const CreateGroupScreen())),
       ),
     );
   }
@@ -66,8 +78,9 @@ class GroupsScreen extends ConsumerWidget {
         actions: [
           TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
           FilledButton(
-              onPressed: () => Navigator.pop(context, controller.text.trim()),
-              child: const Text('Join')),
+            onPressed: () => Navigator.pop(context, controller.text.trim()),
+            child: const Text('Join'),
+          ),
         ],
       ),
     );
@@ -79,8 +92,9 @@ class GroupsScreen extends ConsumerWidget {
       }
     } catch (e) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text('Could not join. Check the code.')));
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Could not join. Check the code.')));
       }
     }
   }
@@ -97,12 +111,18 @@ class _EmptyState extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.receipt_long_outlined, size: 64, color: Theme.of(context).colorScheme.primary),
+            Icon(
+              Icons.receipt_long_outlined,
+              size: 64,
+              color: Theme.of(context).colorScheme.primary,
+            ),
             const SizedBox(height: 16),
             Text('No groups yet', style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 8),
-            const Text('Create a group for a trip, your flat, or office lunches.',
-                textAlign: TextAlign.center),
+            const Text(
+              'Create a group for a trip, your flat, or office lunches.',
+              textAlign: TextAlign.center,
+            ),
           ],
         ),
       ),

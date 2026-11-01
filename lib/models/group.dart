@@ -34,27 +34,27 @@ class Group {
   String nameOf(String memberId) => memberById(memberId)?.name ?? 'Someone';
 
   Group copyWith({String? name, List<Member>? members, List<String>? accessUids}) => Group(
-        id: id,
-        name: name ?? this.name,
-        members: members ?? this.members,
-        accessUids: accessUids ?? this.accessUids,
-        createdAt: createdAt,
-      );
+    id: id,
+    name: name ?? this.name,
+    members: members ?? this.members,
+    accessUids: accessUids ?? this.accessUids,
+    createdAt: createdAt,
+  );
 
   Map<String, dynamic> toMap() => {
-        'name': name,
-        'members': members.map((m) => m.toMap()).toList(),
-        'accessUids': accessUids,
-        'createdAt': createdAt,
-      };
+    'name': name,
+    'members': members.map((m) => m.toMap()).toList(),
+    'accessUids': accessUids,
+    'createdAt': createdAt,
+  };
 
   factory Group.fromMap(String id, Map<String, dynamic> m) => Group(
-        id: id,
-        name: m['name'] as String,
-        members: (m['members'] as List)
-            .map((e) => Member.fromMap(Map<String, dynamic>.from(e as Map)))
-            .toList(),
-        accessUids: List<String>.from(m['accessUids'] as List),
-        createdAt: m['createdAt'] as DateTime,
-      );
+    id: id,
+    name: m['name'] as String,
+    members: (m['members'] as List)
+        .map((e) => Member.fromMap(Map<String, dynamic>.from(e as Map)))
+        .toList(),
+    accessUids: List<String>.from(m['accessUids'] as List),
+    createdAt: m['createdAt'] as DateTime,
+  );
 }

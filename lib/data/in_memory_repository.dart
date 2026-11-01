@@ -10,6 +10,8 @@ import 'repository.dart';
 
 /// Demo backend that keeps everything in memory. Data is lost on restart.
 class InMemoryRepository implements Repository {
+  InMemoryRepository([this.currentUid = 'local-user']);
+
   final _uuid = const Uuid();
   final _changes = StreamController<void>.broadcast();
   final _groups = <String, Group>{};
@@ -17,7 +19,7 @@ class InMemoryRepository implements Repository {
   final _settlements = <String, List<Settlement>>{};
 
   @override
-  final String currentUid = 'local-user';
+  final String currentUid;
 
   @override
   String newId() => _uuid.v4();
@@ -32,16 +34,16 @@ class InMemoryRepository implements Repository {
   void _notify() => _changes.add(null);
 
   @override
-  Stream<List<Group>> watchGroups() => _watch(() => _groups.values.toList()
-    ..sort((a, b) => b.createdAt.compareTo(a.createdAt)));
+  Stream<List<Group>> watchGroups() =>
+      _watch(() => _groups.values.toList()..sort((a, b) => b.createdAt.compareTo(a.createdAt)));
 
   @override
   Stream<Group?> watchGroup(String groupId) => _watch(() => _groups[groupId]);
 
   @override
-  Stream<List<Expense>> watchExpenses(String groupId) =>
-      _watch(() => (_expenses[groupId]?.values.toList() ?? [])
-        ..sort((a, b) => b.date.compareTo(a.date)));
+  Stream<List<Expense>> watchExpenses(String groupId) => _watch(
+    () => (_expenses[groupId]?.values.toList() ?? [])..sort((a, b) => b.date.compareTo(a.date)),
+  );
 
   @override
   Stream<List<Settlement>> watchSettlements(String groupId) =>

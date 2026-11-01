@@ -35,26 +35,26 @@ class Expense {
   final DateTime date;
 
   Map<String, dynamic> toMap() => {
-        'description': description,
-        'amount': amount,
-        'paidBy': paidBy,
-        'owed': owed,
-        'splitType': splitType.name,
-        'splitValues': splitValues,
-        'category': category,
-        'date': date,
-      };
+    'description': description,
+    'amount': amount,
+    'paidBy': paidBy,
+    'owed': owed,
+    'splitType': splitType.name,
+    'splitValues': splitValues,
+    'category': category,
+    'date': date,
+  };
 
   factory Expense.fromMap(String id, String groupId, Map<String, dynamic> m) => Expense(
-        id: id,
-        groupId: groupId,
-        description: m['description'] as String,
-        amount: m['amount'] as int,
-        paidBy: Map<String, int>.from(m['paidBy'] as Map),
-        owed: Map<String, int>.from(m['owed'] as Map),
-        splitType: SplitType.values.byName(m['splitType'] as String),
-        splitValues: Map<String, num>.from((m['splitValues'] as Map?) ?? const {}),
-        category: (m['category'] as String?) ?? 'general',
-        date: m['date'] as DateTime,
-      );
+    id: id,
+    groupId: groupId,
+    description: m['description'] as String,
+    amount: m['amount'] as int,
+    paidBy: Map<String, int>.from(m['paidBy'] as Map),
+    owed: Map<String, int>.from(m['owed'] as Map),
+    splitType: SplitType.values.byName(m['splitType'] as String),
+    splitValues: Map<String, num>.from((m['splitValues'] as Map?) ?? const {}),
+    category: (m['category'] as String?) ?? 'general',
+    date: m['date'] as DateTime,
+  );
 }

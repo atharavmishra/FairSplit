@@ -8,24 +8,20 @@ class Member {
   final String? uid;
   final String? upiId;
 
-  Member copyWith({String? name, String? uid, String? upiId}) => Member(
-        id: id,
-        name: name ?? this.name,
-        uid: uid ?? this.uid,
-        upiId: upiId ?? this.upiId,
-      );
+  Member copyWith({String? name, String? uid, String? upiId}) =>
+      Member(id: id, name: name ?? this.name, uid: uid ?? this.uid, upiId: upiId ?? this.upiId);
 
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'name': name,
-        if (uid != null) 'uid': uid,
-        if (upiId != null && upiId!.isNotEmpty) 'upiId': upiId,
-      };
+    'id': id,
+    'name': name,
+    if (uid != null) 'uid': uid,
+    if (upiId != null && upiId!.isNotEmpty) 'upiId': upiId,
+  };
 
   factory Member.fromMap(Map<String, dynamic> m) => Member(
-        id: m['id'] as String,
-        name: m['name'] as String,
-        uid: m['uid'] as String?,
-        upiId: m['upiId'] as String?,
-      );
+    id: m['id'] as String,
+    name: m['name'] as String,
+    uid: m['uid'] as String?,
+    upiId: m['upiId'] as String?,
+  );
 }

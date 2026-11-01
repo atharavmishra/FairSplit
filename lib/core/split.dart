@@ -49,8 +49,7 @@ Map<String, int> computeSplit({
       }
       final sum = result.values.fold(0, (a, b) => a + b);
       if (sum != total) {
-        throw SplitException(
-            'Amounts add up to ${formatAmount(sum)}, not ${formatAmount(total)}');
+        throw SplitException('Amounts add up to ${formatAmount(sum)}, not ${formatAmount(total)}');
       }
     case SplitType.percent:
       final weights = {for (final m in members) m: values[m] ?? 0};

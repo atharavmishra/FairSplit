@@ -37,14 +37,16 @@ class _SettleUpSheetState extends ConsumerState<_SettleUpSheet> {
 
   Future<void> _record() async {
     final repo = ref.read(repositoryProvider);
-    await repo.addSettlement(Settlement(
-      id: repo.newId(),
-      groupId: widget.group.id,
-      from: widget.transfer.from,
-      to: widget.transfer.to,
-      amount: _paise!,
-      date: DateTime.now(),
-    ));
+    await repo.addSettlement(
+      Settlement(
+        id: repo.newId(),
+        groupId: widget.group.id,
+        from: widget.transfer.from,
+        to: widget.transfer.to,
+        amount: _paise!,
+        date: DateTime.now(),
+      ),
+    );
     if (mounted) Navigator.pop(context);
   }
 
@@ -54,8 +56,7 @@ class _SettleUpSheetState extends ConsumerState<_SettleUpSheet> {
       mode: LaunchMode.externalApplication,
     );
     if (!ok && mounted) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('No UPI app found')));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('No UPI app found')));
     }
   }
 
@@ -76,8 +77,10 @@ class _SettleUpSheetState extends ConsumerState<_SettleUpSheet> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text('$from pays ${payee?.name ?? 'Someone'}',
-              style: Theme.of(context).textTheme.titleLarge),
+          Text(
+            '$from pays ${payee?.name ?? 'Someone'}',
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
           const SizedBox(height: 16),
           TextField(
             controller: _amount,
@@ -93,8 +96,10 @@ class _SettleUpSheetState extends ConsumerState<_SettleUpSheet> {
               onPressed: _paise == null ? null : () => _payUpi(upiId, payee!.name),
             ),
             const SizedBox(height: 4),
-            const Text('After paying in your UPI app, come back and record the payment.',
-                textAlign: TextAlign.center),
+            const Text(
+              'After paying in your UPI app, come back and record the payment.',
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(height: 12),
           ],
           FilledButton(

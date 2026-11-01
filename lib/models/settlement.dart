@@ -21,11 +21,11 @@ class Settlement {
   Map<String, dynamic> toMap() => {'from': from, 'to': to, 'amount': amount, 'date': date};
 
   factory Settlement.fromMap(String id, String groupId, Map<String, dynamic> m) => Settlement(
-        id: id,
-        groupId: groupId,
-        from: m['from'] as String,
-        to: m['to'] as String,
-        amount: m['amount'] as int,
-        date: m['date'] as DateTime,
-      );
+    id: id,
+    groupId: groupId,
+    from: m['from'] as String,
+    to: m['to'] as String,
+    amount: m['amount'] as int,
+    date: m['date'] as DateTime,
+  );
 }

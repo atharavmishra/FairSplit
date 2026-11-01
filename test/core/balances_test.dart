@@ -7,23 +7,24 @@ import 'package:fairsplit/models/settlement.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Expense expense(Map<String, int> paidBy, Map<String, int> owed) => Expense(
-      id: 'e',
-      groupId: 'g',
-      description: 'x',
-      amount: paidBy.values.fold(0, (a, b) => a + b),
-      paidBy: paidBy,
-      owed: owed,
-      splitType: SplitType.exact,
-      date: DateTime(2026),
-    );
+  id: 'e',
+  groupId: 'g',
+  description: 'x',
+  amount: paidBy.values.fold(0, (a, b) => a + b),
+  paidBy: paidBy,
+  owed: owed,
+  splitType: SplitType.exact,
+  date: DateTime(2026),
+);
 
 void main() {
   test('net balances from expenses and settlements', () {
-    final net = netBalances([
-      expense({'a': 3000}, {'a': 1000, 'b': 1000, 'c': 1000}),
-    ], [
-      Settlement(id: 's', groupId: 'g', from: 'b', to: 'a', amount: 1000, date: DateTime(2026)),
-    ]);
+    final net = netBalances(
+      [
+        expense({'a': 3000}, {'a': 1000, 'b': 1000, 'c': 1000}),
+      ],
+      [Settlement(id: 's', groupId: 'g', from: 'b', to: 'a', amount: 1000, date: DateTime(2026))],
+    );
     expect(net, {'a': 1000, 'b': 0, 'c': -1000});
   });
 
@@ -49,8 +50,9 @@ void main() {
         final payer = people[rng.nextInt(people.length)];
         final members = people.where((_) => rng.nextBool()).toList();
         if (members.isEmpty) members.add(payer);
-        return expense({payer: total},
-            computeSplit(total: total, type: SplitType.equal, members: members));
+        return expense({
+          payer: total,
+        }, computeSplit(total: total, type: SplitType.equal, members: members));
       });
       final net = netBalances(expenses, []);
       final transfers = simplifyDebts(net);

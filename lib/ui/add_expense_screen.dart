@@ -65,17 +65,19 @@ class _AddExpenseScreenState extends ConsumerState<AddExpenseScreen> {
     super.dispose();
   }
 
-  List<String> get _participants =>
-      [for (final m in widget.group.members) if (_selected.contains(m.id)) m.id];
+  List<String> get _participants => [
+    for (final m in widget.group.members)
+      if (_selected.contains(m.id)) m.id,
+  ];
 
   Map<String, num> _splitValues() => {
-        for (final id in _participants)
-          id: switch (_type) {
-            SplitType.equal => 1,
-            SplitType.exact => parseAmount(_values[id]!.text) ?? 0,
-            _ => num.tryParse(_values[id]!.text.trim()) ?? 0,
-          },
-      };
+    for (final id in _participants)
+      id: switch (_type) {
+        SplitType.equal => 1,
+        SplitType.exact => parseAmount(_values[id]!.text) ?? 0,
+        _ => num.tryParse(_values[id]!.text.trim()) ?? 0,
+      },
+  };
 
   /// The split for the current inputs, or an error message.
   (Map<String, int>?, String?) _preview() {
@@ -103,18 +105,20 @@ class _AddExpenseScreenState extends ConsumerState<AddExpenseScreen> {
   Future<void> _save(Map<String, int> owed) async {
     final repo = ref.read(repositoryProvider);
     final amount = parseAmount(_amount.text)!;
-    await repo.saveExpense(Expense(
-      id: widget.existing?.id ?? repo.newId(),
-      groupId: widget.group.id,
-      description: _description.text.trim().isEmpty ? 'Expense' : _description.text.trim(),
-      amount: amount,
-      paidBy: {_payer: amount},
-      owed: owed,
-      splitType: _type,
-      splitValues: _splitValues(),
-      category: widget.existing?.category ?? 'general',
-      date: _date,
-    ));
+    await repo.saveExpense(
+      Expense(
+        id: widget.existing?.id ?? repo.newId(),
+        groupId: widget.group.id,
+        description: _description.text.trim().isEmpty ? 'Expense' : _description.text.trim(),
+        amount: amount,
+        paidBy: {_payer: amount},
+        owed: owed,
+        splitType: _type,
+        splitValues: _splitValues(),
+        category: widget.existing?.category ?? 'general',
+        date: _date,
+      ),
+    );
     if (mounted) Navigator.pop(context);
   }
 
@@ -214,7 +218,8 @@ class _AddExpenseScreenState extends ConsumerState<AddExpenseScreen> {
               children: [
                 Checkbox(
                   value: _selected.contains(m.id),
-                  onChanged: (v) => setState(() => v! ? _selected.add(m.id) : _selected.remove(m.id)),
+                  onChanged: (v) =>
+                      setState(() => v! ? _selected.add(m.id) : _selected.remove(m.id)),
                 ),
                 Expanded(child: Text(m.name)),
                 if (_type != SplitType.equal && _selected.contains(m.id))

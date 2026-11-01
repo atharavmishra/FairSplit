@@ -19,11 +19,19 @@ class GroupScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ref.watch(groupProvider(groupId)).when(
+    return ref
+        .watch(groupProvider(groupId))
+        .when(
           loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
-          error: (e, _) => Scaffold(appBar: AppBar(), body: Center(child: Text('$e'))),
+          error: (e, _) => Scaffold(
+            appBar: AppBar(),
+            body: Center(child: Text('$e')),
+          ),
           data: (group) => group == null
-              ? Scaffold(appBar: AppBar(), body: const Center(child: Text('Group not found')))
+              ? Scaffold(
+                  appBar: AppBar(),
+                  body: const Center(child: Text('Group not found')),
+                )
               : _GroupView(group: group),
         );
   }
@@ -54,7 +62,12 @@ class _GroupView extends ConsumerWidget {
               onPressed: () => _showInvite(context),
             ),
           ],
-          bottom: const TabBar(tabs: [Tab(text: 'Expenses'), Tab(text: 'Balances')]),
+          bottom: const TabBar(
+            tabs: [
+              Tab(text: 'Expenses'),
+              Tab(text: 'Balances'),
+            ],
+          ),
         ),
         body: Column(
           children: [
@@ -63,23 +76,28 @@ class _GroupView extends ConsumerWidget {
                 content: const Text('Which member are you? Claim your name to see your share.'),
                 actions: [
                   TextButton(
-                      onPressed: () => showMembersSheet(context, group),
-                      child: const Text('Choose')),
+                    onPressed: () => showMembersSheet(context, group),
+                    child: const Text('Choose'),
+                  ),
                 ],
               ),
             Expanded(
-              child: TabBarView(children: [
-                _ExpensesTab(group: group, myId: me?.id),
-                _BalancesTab(group: group, myId: me?.id),
-              ]),
+              child: TabBarView(
+                children: [
+                  _ExpensesTab(group: group, myId: me?.id),
+                  _BalancesTab(group: group, myId: me?.id),
+                ],
+              ),
             ),
           ],
         ),
         floatingActionButton: FloatingActionButton.extended(
           icon: const Icon(Icons.add),
           label: const Text('Add expense'),
-          onPressed: () => Navigator.push(context,
-              MaterialPageRoute(builder: (_) => AddExpenseScreen(group: group))),
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => AddExpenseScreen(group: group)),
+          ),
         ),
       ),
     );
@@ -104,8 +122,9 @@ class _GroupView extends ConsumerWidget {
             onPressed: () {
               Clipboard.setData(ClipboardData(text: group.id));
               Navigator.pop(context);
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(const SnackBar(content: Text('Invite code copied')));
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(const SnackBar(content: Text('Invite code copied')));
             },
             child: const Text('Copy code'),
           ),
@@ -141,11 +160,11 @@ class _ExpensesTab extends ConsumerWidget {
           itemBuilder: (context, i) => switch (items[i]) {
             final Expense e => _ExpenseTile(group: group, expense: e, myId: myId),
             final Settlement s => ListTile(
-                leading: const CircleAvatar(child: Icon(Icons.payments_outlined)),
-                title: Text('${group.nameOf(s.from)} paid ${group.nameOf(s.to)}'),
-                subtitle: Text(DateFormat('d MMM').format(s.date)),
-                trailing: Text(formatAmount(s.amount)),
-              ),
+              leading: const CircleAvatar(child: Icon(Icons.payments_outlined)),
+              title: Text('${group.nameOf(s.from)} paid ${group.nameOf(s.to)}'),
+              subtitle: Text(DateFormat('d MMM').format(s.date)),
+              trailing: Text(formatAmount(s.amount)),
+            ),
             _ => const SizedBox.shrink(),
           },
         );
@@ -176,20 +195,34 @@ class _ExpenseTile extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Text(mine > 0 ? 'you lent' : 'you owe', style: Theme.of(context).textTheme.bodySmall),
-                Text(formatAmount(mine.abs()),
-                    style: TextStyle(color: mine > 0 ? colors.primary : colors.error)),
+                Text(
+                  mine > 0 ? 'you lent' : 'you owe',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                Text(
+                  formatAmount(mine.abs()),
+                  style: TextStyle(color: mine > 0 ? colors.primary : colors.error),
+                ),
               ],
             );
     }
     return ListTile(
-      leading: CircleAvatar(child: Text(DateFormat('d\nMMM').format(expense.date),
-          textAlign: TextAlign.center, style: const TextStyle(fontSize: 11))),
+      leading: CircleAvatar(
+        child: Text(
+          DateFormat('d\nMMM').format(expense.date),
+          textAlign: TextAlign.center,
+          style: const TextStyle(fontSize: 11),
+        ),
+      ),
       title: Text(expense.description),
       subtitle: Text('$payers paid ${formatAmount(expense.amount)}'),
       trailing: trailing,
-      onTap: () => Navigator.push(context,
-          MaterialPageRoute(builder: (_) => AddExpenseScreen(group: group, existing: expense))),
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => AddExpenseScreen(group: group, existing: expense),
+        ),
+      ),
     );
   }
 }
@@ -203,7 +236,9 @@ class _BalancesTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = Theme.of(context).colorScheme;
-    return ref.watch(balancesProvider(group.id)).when(
+    return ref
+        .watch(balancesProvider(group.id))
+        .when(
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (e, _) => Center(child: Text('$e')),
           data: (b) => ListView(
@@ -215,10 +250,14 @@ class _BalancesTab extends ConsumerWidget {
                   title: Text(m.id == myId ? '${m.name} (you)' : m.name),
                   trailing: switch (b.net[m.id] ?? 0) {
                     0 => const Text('settled up'),
-                    final v when v > 0 =>
-                      Text('gets back ${formatAmount(v)}', style: TextStyle(color: colors.primary)),
-                    final v =>
-                      Text('owes ${formatAmount(-v)}', style: TextStyle(color: colors.error)),
+                    final v when v > 0 => Text(
+                      'gets back ${formatAmount(v)}',
+                      style: TextStyle(color: colors.primary),
+                    ),
+                    final v => Text(
+                      'owes ${formatAmount(-v)}',
+                      style: TextStyle(color: colors.error),
+                    ),
                   },
                 ),
               const Divider(),
@@ -226,8 +265,7 @@ class _BalancesTab extends ConsumerWidget {
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
                 child: Text('Suggested payments', style: Theme.of(context).textTheme.titleMedium),
               ),
-              if (b.transfers.isEmpty)
-                const ListTile(title: Text('Everyone is settled up 🎉')),
+              if (b.transfers.isEmpty) const ListTile(title: Text('Everyone is settled up 🎉')),
               for (final t in b.transfers)
                 ListTile(
                   title: Text('${group.nameOf(t.from)} pays ${group.nameOf(t.to)}'),

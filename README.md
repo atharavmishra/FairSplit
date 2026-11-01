@@ -2,6 +2,8 @@
 
 A free, no-limits expense splitter (Splitwise alternative). Flutter + Firebase.
 
+**Plan & progress tracker:** https://claude.ai/artifact/4sXMV7ZawABBpvuF6Xq5JK
+
 ## Run it now (demo mode, no setup)
 
 ```bash
@@ -9,11 +11,13 @@ flutter run
 ```
 
 Demo mode keeps data in memory, so it's lost when the app restarts. Good for trying the UI.
+"Continue with Google" needs Firebase; use "Continue as guest" in demo mode.
 
 ## Connect Firebase (real, synced data)
 
 1. Create a project at https://console.firebase.google.com (Spark/free plan).
-2. **Build → Authentication → Sign-in method:** enable **Anonymous**.
+2. **Build → Authentication → Sign-in method:** enable **Anonymous** and **Google**
+   (pick your email as the support email).
 3. **Build → Firestore Database:** create a database (production mode, region `asia-south1` for India).
 4. Install the CLIs and generate `lib/firebase_options.dart`:
    ```bash
@@ -22,17 +26,44 @@ Demo mode keeps data in memory, so it's lost when the app restarts. Good for try
    firebase login
    flutterfire configure --platforms=android,ios --android-package-name=in.fairsplit.app
    ```
-5. Deploy the security rules: `firebase deploy --only firestore:rules`
+5. **Register your SHA-1 for Google sign-in** (Android needs it, or sign-in fails with a
+   "developer error"):
+   ```bash
+   cd android && ./gradlew signingReport
+   ```
+   Copy the SHA-1 (and SHA-256) of the `debug` variant into **Project settings → Your apps →
+   Android app → Add fingerprint**, then re-run `flutterfire configure` so `google-services.json`
+   includes the OAuth client. Repeat later for your release/upload key **and** the
+   "App signing key" Play Console shows under *Test and release → App integrity*.
+
+   If sign-in still says the client ID is missing, pass the **Web client** ID (Google Cloud
+   console → Credentials, "Web client (auto created by Google Service)"):
+   `--dart-define=GOOGLE_SERVER_CLIENT_ID=xxxx.apps.googleusercontent.com`.
+
+   iOS only: add the `REVERSED_CLIENT_ID` from `GoogleService-Info.plist` as a URL scheme in
+   `ios/Runner/Info.plist` (see the google_sign_in package README).
+6. Deploy the security rules: `firebase deploy --only firestore:rules`
    (run `firebase init firestore` first and point it at the existing `firestore.rules`).
-6. Run with Firebase:
+7. Run with Firebase:
    ```bash
    flutter run --dart-define=USE_FIREBASE=true
    ```
+
+## How sign-in works
+
+- **Guest** = Firebase anonymous account. Works offline, no personal data.
+- **Link Google** (Account screen) keeps the same user id, so every group carries over.
+- If that Google account already used FairSplit on another phone, the app switches to it and
+  moves the guest's groups (and claimed member names) into it.
+- **Delete account** removes you from every group, deletes groups nobody else uses (with their
+  expenses), keeps your name in shared groups so others' balances stay right, then deletes the
+  Firebase user (asking Google to re-confirm if the last sign-in was long ago).
 
 ## Project layout
 
 ```
 lib/
+  auth/      AuthService: Firebase (guest + Google) and demo implementations
   core/      money (paise), split engine, simplify debts, UPI links   <- pure Dart, unit tested
   models/    Group, Member, Expense, Settlement
   data/      Repository interface + Firestore and in-memory implementations
@@ -66,8 +97,10 @@ the `applicationId` (`in.fairsplit.app`). It can't be changed after the first up
 - [x] Equal / exact / percentage / shares splits, edit & delete
 - [x] Live balances, simplify debts, settle up, UPI pay links
 - [x] Offline-first (Firestore cache)
-- [ ] Google / phone sign-in (link to the anonymous account)
+- [x] Google sign-in; guests link Google without losing data (or merge into an existing account)
+- [x] In-app account deletion (leaves groups, deletes groups only you used)
 - [ ] Multiple payers in the UI (model already supports it)
 - [ ] Receipt scanning (ML Kit), categories, charts, search, CSV export
 - [ ] Push reminders, recurring expenses, multi-currency
-- [ ] Account deletion screen (required by Play Store), privacy policy page
+- [ ] Privacy policy page + web account-deletion page (both required by Play Store)
+- [ ] Phone (OTP) sign-in

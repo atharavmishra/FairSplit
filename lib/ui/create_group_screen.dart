@@ -13,7 +13,9 @@ class CreateGroupScreen extends ConsumerStatefulWidget {
 
 class _CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
   final _name = TextEditingController();
-  final _yourName = TextEditingController();
+  late final _yourName = TextEditingController(
+    text: ref.read(authStateProvider).value?.displayName ?? '',
+  );
   final _memberName = TextEditingController();
   final _others = <String>[];
 
@@ -30,14 +32,11 @@ class _CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
 
   Future<void> _create() async {
     _addMember();
-    final id = await ref.read(repositoryProvider).createGroup(
-          name: _name.text.trim(),
-          yourName: _yourName.text.trim(),
-          otherNames: _others,
-        );
+    final id = await ref
+        .read(repositoryProvider)
+        .createGroup(name: _name.text.trim(), yourName: _yourName.text.trim(), otherNames: _others);
     if (!mounted) return;
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (_) => GroupScreen(groupId: id)));
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => GroupScreen(groupId: id)));
   }
 
   @override
@@ -95,7 +94,10 @@ class _CreateGroupScreenState extends ConsumerState<CreateGroupScreen> {
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16),
-          child: FilledButton(onPressed: _valid ? _create : null, child: const Text('Create group')),
+          child: FilledButton(
+            onPressed: _valid ? _create : null,
+            child: const Text('Create group'),
+          ),
         ),
       ),
     );

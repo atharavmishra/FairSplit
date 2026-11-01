@@ -43,7 +43,8 @@ class _MembersSheet extends ConsumerWidget {
                   if (!claimed && m.uid == null)
                     TextButton(
                       onPressed: () => save([
-                        for (final x in group.members) x.id == m.id ? x.copyWith(uid: repo.currentUid) : x,
+                        for (final x in group.members)
+                          x.id == m.id ? x.copyWith(uid: repo.currentUid) : x,
                       ]),
                       child: const Text("That's me"),
                     ),
@@ -96,7 +97,9 @@ Future<Member?> _editMember(BuildContext context, Member member) {
             TextFormField(
               controller: upi,
               decoration: const InputDecoration(
-                  labelText: 'UPI ID (optional)', hintText: 'name@okicici'),
+                labelText: 'UPI ID (optional)',
+                hintText: 'name@okicici',
+              ),
               validator: (v) =>
                   (v ?? '').trim().isEmpty || isValidUpiId(v!) ? null : 'Not a valid UPI ID',
             ),
