@@ -96,10 +96,9 @@ the `applicationId` (`in.fairsplit.app`). It can't be changed after the first up
 `docs/` holds the public site Play Store requires: `privacy.html`, `delete-account.html` and a
 landing page. Support contact on the pages: atharvmishra77@gmail.com.
 
-1. Publish with GitHub Pages: push to a **public** repo named `fairsplit` under
-   `Atharv-Mishra-25`, then Settings → Pages → Deploy from branch `main`, folder `/docs`.
-   (To keep the code private, put only the `docs/` files in that public repo; the URL is the same.)
-2. The pages then live at https://atharv-mishra-25.github.io/fairsplit/ — this base URL is in
+1. Publish with GitHub Pages: in https://github.com/atharavmishra/FairSplit go to
+   Settings → Pages → Deploy from a branch → `main`, folder `/docs`.
+2. The pages then live at https://atharavmishra.github.io/FairSplit/ — this base URL is in
    `lib/core/links.dart` (used by the Account screen). Paste the privacy and deletion URLs into
    Play Console.
 
